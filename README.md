@@ -1,1 +1,4 @@
-# u-develop-it
+# U-Develop-It
+
+Richard Ay - October 2020
+
