@@ -41,7 +41,7 @@ app.get('/api/candidates', (req, res) => {        // 'api' indicates this is an 
       }
   
       res.json({
-        message: 'success',
+        message: 'Success',
         data: rows
       });
     });
@@ -51,7 +51,7 @@ app.get('/api/candidates', (req, res) => {        // 'api' indicates this is an 
 app.get('/api/candidate/:id', (req, res) => {
     const sql = `SELECT * FROM candidates WHERE id = ?`;
     const params = [req.params.id];
-    
+
     db.get(sql, params, (err, row) => {
       if (err) {
         res.status(400).json({ error: err.message });
@@ -59,7 +59,7 @@ app.get('/api/candidate/:id', (req, res) => {
       }
   
       res.json({
-        message: 'success',
+        message: 'Success',
         data: row
       });
     });
@@ -67,12 +67,22 @@ app.get('/api/candidate/:id', (req, res) => {
 
 
 // Delete a candidate from the database, based on their ID
-// db.run(`DELETE FROM candidates WHERE id = ?`, 1, function(err, result) {
-//     if (err) {
-//       console.log(err);
-//     }
-//     console.log(result, this, this.changes);
-//   });
+app.delete('/api/candidate/:id', (req, res) => {
+    const sql = `DELETE FROM candidates WHERE id = ?`;
+    const params = [req.params.id];
+
+    db.run(sql, params, function(err, result) {
+      if (err) {
+        res.status(400).json({ error: res.message });
+        return;
+      }
+  
+      res.json({
+        message: 'Successfully deleted',
+        changes: this.changes
+      });
+    });
+  });
 
 
 // Create a record for a new candidate.
