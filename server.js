@@ -15,6 +15,7 @@ app.use(express.urlencoded( { extended: false } ));
 app.use(express.json());
 
 
+////////////////////////////////////////////////////////////////////////////////////////////
 // Setup the connection to the SQL database. This creates an object, an
 // instance of the database file.
 
@@ -26,6 +27,9 @@ const db = new sqlite3.Database( './db/election.db', err => {
     console.log('Connected to the election database.');
   });
 
+
+////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////
 // Specific routes go here, before the "catch-all 404" response.
 
 
@@ -54,6 +58,8 @@ app.get('/api/candidates', (req, res) => {        // 'api' indicates this is an 
     });
   });
 
+
+////////////////////////////////////////////////////////////////////////////////////////////
 // GET the data for a single candidate based on their ID
 app.get('/api/candidate/:id', (req, res) => {
     const sql = `SELECT candidates.*, parties.name 
@@ -62,7 +68,7 @@ app.get('/api/candidate/:id', (req, res) => {
                 LEFT JOIN parties 
                 ON candidates.party_id = parties.id 
                 WHERE candidates.id = ?`;
-                
+
     const params = [req.params.id];
 
     db.get(sql, params, (err, row) => {
@@ -79,6 +85,7 @@ app.get('/api/candidate/:id', (req, res) => {
   });
 
 
+////////////////////////////////////////////////////////////////////////////////////////////
 // Delete a candidate from the database, based on their ID
 app.delete('/api/candidate/:id', (req, res) => {
     const sql = `DELETE FROM candidates WHERE id = ?`;
@@ -91,13 +98,14 @@ app.delete('/api/candidate/:id', (req, res) => {
       }
   
       res.json({
-        message: 'Successfully deleted',
+        message: 'Candidate successfully deleted',
         changes: this.changes
       });
     });
   });
 
 
+////////////////////////////////////////////////////////////////////////////////////////////  
 // Create a record for a new candidate.
 
 app.post('/api/candidate', ({ body }, res) => {
@@ -127,15 +135,109 @@ app.post('/api/candidate', ({ body }, res) => {
 });
 
 
+////////////////////////////////////////////////////////////////////////////////////////////
+// Update a candidate's data
+app.put('/api/candidate/:id', (req, res) => {
 
-  // Address non-supported requests
-  app.use((req, res) => {
-    res.status(404).end();
+  // Make sure the party_id was specified.
+  const errors = inputCheck(req.body, 'party_id');
+
+  if (errors) {
+    res.status(400).json({ error: errors });
+    return;
+  }
+
+  const sql = `UPDATE candidates SET party_id = ? 
+               WHERE id = ?`;
+  const params = [req.body.party_id, req.params.id];
+
+  // As above, the ES5 'function' is used because we employ 'this'.
+  db.run(sql, params, function (err, result) {
+    if (err) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
+
+    res.json({
+      message: 'Successful update of party_id ',
+      data: req.body,
+      changes: this.changes
+    });
   });
+});
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////
+// Define the routes for the 'parties' table
+
+// This will return all parties in the database.
+app.get('/api/parties', (req, res) => {
+  const sql = `SELECT * FROM parties`;
+  const params = [];
+
+  db.all(sql, params, (err, rows) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+      return;
+    }
+
+    res.json({
+      message: 'Success',
+      data: rows
+    });
+  });
+});
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Return the data for a single party.
+app.get('/api/party/:id', (req, res) => {
+  const sql = `SELECT * FROM parties WHERE id = ?`;
+  const params = [req.params.id];
+
+  db.get(sql, params, (err, row) => {
+    if (err) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
+
+    res.json({
+      message: 'Success',
+      data: row
+    });
+  });
+});
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Delete a single party.
+app.delete('/api/party/:id', (req, res) => {
+  const sql = `DELETE FROM parties WHERE id = ?`;
+  const params = [req.params.id];
+
+  // Need to use ES5 'function' (instead of ES6) because we need to use the 'this' parameter.
+  db.run(sql, params, function(err, result) {
+    if (err) {
+      res.status(400).json({ error: res.message });
+      return;
+    }
+
+    res.json({ message: 'Party Successfully deleted', changes: this.changes });
+  });
+});
 
 
 
+////////////////////////////////////////////////////////////////////////////////////////////
+// Address non-supported requests
+app.use((req, res) => {
+    res.status(404).end();
+});
 
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
 // Start the express.js Server on port 3001.  Need to make sure this starts after 
 // the database connection is established - put this in an event handler.
 
