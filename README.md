@@ -9,6 +9,7 @@ Richard Ay (October 2020, *updated February 2022*)
 * [Application Walk Through](#application-walk-through)
 * [Technologies Used](#technologies-used)
 * [Deployment Link](#deployment-link)
+* [Application Source Code Setup and Structure](#application-source-code-setup-and-structure)
 * [Application Screen Shots](#application-screen-shots)
 
    
@@ -17,7 +18,7 @@ This application is deployed on Heroku, therefore it is NOT installed on the loc
 
 ## Usage Instructions
     
-    From the browsers address line, issue the command: https:zookeepr-ay.herokuapp.com 
+    From the browsers address line, issue the command: 
 
 ## Application Walk Through
 
@@ -26,12 +27,19 @@ This application is deployed on Heroku, therefore it is NOT installed on the loc
 * Node.js
 * Express
 * Heroku
-* JSON
+* SQL
 * Insomnia Core
 
 ## Deployment Link
 The application is deployed on Heroku, see above usage instructions.
 
+## Application Source Code Setup and Structure
+The directory structure is setup as follows:
+* Root Directory: contains the package files, gitignore, and /db, /__tests__, /utils, /routes
+* /db contains 
+* __tests__ contains the (TDD) unit tests for the application.
+* /utils contains
+* /routes contains /apiRoutes, which contains the Javascript files for the various application routes.
 
 ## Application Screen Shots
 
