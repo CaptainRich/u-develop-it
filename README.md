@@ -26,8 +26,10 @@ This application is deployed on Heroku, therefore it is NOT installed on the loc
 
 * Node.js
 * Express
-* Heroku
-* SQL
+* Jest
+* Inquirer
+* MySQL
+* Schema, seed files
 * Insomnia Core
 
 ## Deployment Link
