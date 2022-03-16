@@ -2,7 +2,7 @@
 
 // Import the 'express' module and the sqlite3 package
 
-const sqlite3    = require( 'sqlite3' ).verbose();
+const sqlite3    = require( 'sqlite3' ).verbose();    // 'verbose' produces messages for us
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -17,4 +17,5 @@ const db = new sqlite3.Database( './db/election.db', err => {
     console.log('Connected to the election database.');
   });
 
+///////////////////////////////////////////////////////////////////////////////////////////////
 module.exports = db;

@@ -3,7 +3,7 @@
 // Import the 'express' module and the sqlite3 package
 
 const express    = require( 'express' );
-const db         = require( './db/database' );
+const db         = require( './db/database' );            // this is where the database connection is established
 const apiRoutes  = require( './routes/apiRoutes') ;
 
 const PORT       = process.env.PORT || 3001;
@@ -14,7 +14,6 @@ const app        = express();
 app.use(express.urlencoded( { extended: false } ));
 app.use(express.json());
 app.use('/api', apiRoutes);            // so we don't need '/api/ in the individual routes
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Address non-supported requests

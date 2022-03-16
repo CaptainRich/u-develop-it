@@ -61,11 +61,14 @@ router.get('/candidate/:id', (req, res) => {
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Delete a candidate from the database, based on their ID
 router.delete('/candidate/:id', (req, res) => {
-    const sql = `DELETE FROM candidates WHERE id = ?`;
-    const params = [req.params.id];
 
-    db.run(sql, params, function(err, result) {
-      if (err) {
+    // The 'id=?' is a placeholder in  prepared statement.  When defining this value in the 
+    // 'params' optional parameter, SQLite3 'escapes' the values to prevent an injection attack.
+    const sql = `DELETE FROM candidates WHERE id = ?`;
+    const params = [req.params.id];                          // optional parameter to specify the 'id=?' prepared statement
+
+    db.run(sql, params, function(err, result) {              // the 'run' method does not retrieve any result data, 
+      if (err) {                                             //   'result' will be undefined here.
         res.status(400).json({ error: res.message });
         return;
       }
@@ -93,7 +96,7 @@ router.post('/candidate', ({ body }, res) => {
     const params = [body.first_name, body.last_name, body.industry_connected];
 
     // ES5 function syntax, not arrow function, necessary to use `this`
-    db.run(sql, params, function (err, result) {
+    db.run(sql, params, function (err, result) {           // The 'run' method does not retrieve data to 'result'.
         if (err) {
             res.status(400).json({ error: err.message });
             return;
