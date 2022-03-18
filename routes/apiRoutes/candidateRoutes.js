@@ -1,31 +1,33 @@
 
+// Routes for the "candidates' table.
 
 const express    = require('express');
 const router     = express.Router();
 const db         = require('../../db/database');
-const inputCheck = require('../../utils/inputCheck');
+const inputCheck = require('../../utils/inputCheck');   // function to verify data when adding a candidate
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // The 'all' method runs the SQL command and executes the call-back, with 
 // matching data going to 'rows'.  'Rows' is the query response, an array of objects.
 // This will return all the candidates in the database.
 
-router.get('/candidates', (req, res) => {        // 'api' indicates this is an API endpoint
+router.get('/candidates', (req, res) => {               // 'api' (mapped to 'router') indicates this is an API endpoint
     const sql = `SELECT candidates.*, parties.name 
                 AS party_name 
                 FROM candidates 
                 LEFT JOIN parties 
                 ON candidates.party_id = parties.id`;
 
-    const params = [];
+    const params = [];                                  // can be empty since there are no placeholders in the SQL statement
     db.all(sql, params, (err, rows) => {
       if (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: err.message });   // '500' indicates a server error
         return;
       }
   
+      // Return the retrieved data in 'rows'.
       res.json({
-        message: 'Success',
+        message: 'Successfully retrieved all rows from the candidates table.',
         data: rows
       });
     });
@@ -84,6 +86,7 @@ router.delete('/candidate/:id', (req, res) => {
 ////////////////////////////////////////////////////////////////////////////////////////////  
 // Create a record for a new candidate.
 
+// Use object destructuring here to pull the 'body' property out of the 'req' (request).
 router.post('/candidate', ({ body }, res) => {
     const errors = inputCheck(body, 'first_name', 'last_name', 'industry_connected');
     if (errors) {
@@ -103,7 +106,7 @@ router.post('/candidate', ({ body }, res) => {
         }
 
         res.json({
-            message: 'Success',
+            message: 'Success, candidate added.',
             data: body,
             id: this.lastID
         });
