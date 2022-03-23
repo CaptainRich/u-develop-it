@@ -12,6 +12,8 @@ const inputCheck = require('../../utils/inputCheck');   // function to verify da
 // This will return all the candidates in the database.
 
 router.get('/candidates', (req, res) => {               // 'api' (mapped to 'router') indicates this is an API endpoint
+    // This SQL statement adds a candidates party name to the response, from the 'parties' table.
+    // The "AS" parameter provides and alias for the 'parties.name' column
     const sql = `SELECT candidates.*, parties.name 
                 AS party_name 
                 FROM candidates 
@@ -37,6 +39,8 @@ router.get('/candidates', (req, res) => {               // 'api' (mapped to 'rou
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GET the data for a single candidate based on their ID
 router.get('/candidate/:id', (req, res) => {
+    // This SQL statement adds a candidates party name to the response, from the 'parties' table, for a specific candidate id
+    // The "AS" parameter provides and alias for the 'parties.name' column
     const sql = `SELECT candidates.*, parties.name 
                 AS party_name 
                 FROM candidates 
@@ -96,6 +100,7 @@ router.post('/candidate', ({ body }, res) => {
 
     const sql = `INSERT INTO candidates (first_name, last_name, industry_connected) 
               VALUES (?,?,?)`;
+    // optional parameters to specify the '?,?,?' prepared statement
     const params = [body.first_name, body.last_name, body.industry_connected];
 
     // ES5 function syntax, not arrow function, necessary to use `this`
@@ -128,6 +133,8 @@ router.put('/candidate/:id', (req, res) => {
 
   const sql = `UPDATE candidates SET party_id = ? 
                WHERE id = ?`;
+  // Optional parameters to specify the '?,?' prepared statement   
+  // Here the 'row id' should b part of the route (params), while the data being updated is part of the body.          
   const params = [req.body.party_id, req.params.id];
 
   // As above, the ES5 'function' is used because we employ 'this'.
