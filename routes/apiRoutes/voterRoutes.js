@@ -27,25 +27,25 @@ router.get('/voters', (req, res) => {
 
 //////////////////////////////////////////////////////////////////////////////////////
 router.get('/voter/:id', (req, res) => {
-  
-    // The 'id=?' is a placeholder in  prepared statement.  When defining this value in the 
-    // 'params' optional parameter, SQLite3 'escapes' the values to prevent an injection attack.
-    const sql = `SELECT * FROM voters WHERE id = ?`;
-    const params = [req.params.id];                  // optional parameter to specify the 'id=?' prepared statement
-  
-    db.get(sql, params, (err, row) => {
-      if (err) {
-        res.status(400).json({ error: err.message });
-        return;
-      }
-  
-      res.json({
-        message: 'Successfully retrieved data on a voter.',
-        data: row
-      });
-      console.log( "Voter data is: ", row );
+
+  // The 'id=?' is a placeholder in  prepared statement.  When defining this value in the 
+  // 'params' optional parameter, SQLite3 'escapes' the values to prevent an injection attack.
+  const sql = `SELECT * FROM voters WHERE id = ?`;
+  const params = [req.params.id];                  // optional parameter to specify the 'id=?' prepared statement
+
+  db.get(sql, params, (err, row) => {
+    if (err) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
+
+    res.json({
+      message: 'Successfully retrieved data on a voter.',
+      data: row
     });
+
   });
+});
   
 ////////////////////////////////////////////////////////////////////////////////////
 // Route routine to add voters
