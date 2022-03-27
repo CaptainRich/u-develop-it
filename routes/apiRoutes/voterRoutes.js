@@ -43,6 +43,7 @@ router.get('/voter/:id', (req, res) => {
         message: 'Successfully retrieved data on a voter.',
         data: row
       });
+      console.log( "Voter data is: ", row );
     });
   });
   
@@ -58,9 +59,11 @@ router.get('/voter/:id', (req, res) => {
       res.status(400).json({ error: errors });
       return;
     }
-
+  
+    // The 'id=?' is a placeholder in  prepared statement.  When defining this value in the 
+    // 'params' optional parameter, SQLite3 'escapes' the values to prevent an injection attack.
     const sql = `INSERT INTO voters (first_name, last_name, email) VALUES (?,?,?)`;
-    const params = [body.first_name, body.last_name, body.email];
+    const params = [body.first_name, body.last_name, body.email];   // optional parameter to specify the 'id=?' prepared statement
   
     db.run(sql, params, function(err, data) {
       if (err) {
