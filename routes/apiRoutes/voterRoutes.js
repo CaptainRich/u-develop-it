@@ -1,6 +1,6 @@
 
+// Import the required modules for the 'voter' table.
 
-// Import the required modules
 const express    = require('express');
 const router     = express.Router();
 const db         = require('../../db/database');
@@ -9,7 +9,7 @@ const inputCheck = require('../../utils/inputCheck');
 //////////////////////////////////////////////////////////////////////////////////////
 
 router.get('/voters', (req, res) => {
-    const sql = `SELECT * FROM voters ORDER BY last_name`;
+    const sql = `SELECT * FROM voters ORDER BY last_name`;   // obviously this returns the data sorted
     const params = [];
   
     db.all(sql, params, (err, rows) => {
@@ -19,7 +19,7 @@ router.get('/voters', (req, res) => {
       }
   
       res.json({
-        message: 'Success',
+        message: 'Success, retrieved all voters from the database.',
         data: rows
       });
     });
@@ -27,8 +27,11 @@ router.get('/voters', (req, res) => {
 
 //////////////////////////////////////////////////////////////////////////////////////
 router.get('/voter/:id', (req, res) => {
+  
+    // The 'id=?' is a placeholder in  prepared statement.  When defining this value in the 
+    // 'params' optional parameter, SQLite3 'escapes' the values to prevent an injection attack.
     const sql = `SELECT * FROM voters WHERE id = ?`;
-    const params = [req.params.id];
+    const params = [req.params.id];                  // optional parameter to specify the 'id=?' prepared statement
   
     db.get(sql, params, (err, row) => {
       if (err) {
@@ -37,7 +40,7 @@ router.get('/voter/:id', (req, res) => {
       }
   
       res.json({
-        message: 'Success',
+        message: 'Successfully retrieved data on a voter.',
         data: row
       });
     });

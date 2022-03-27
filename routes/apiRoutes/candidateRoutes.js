@@ -57,7 +57,7 @@ router.get('/candidate/:id', (req, res) => {
       }
   
       res.json({
-        message: 'Success',
+        message: 'Successfully retrieved data on a candidate.',
         data: row
       });
     });
@@ -152,4 +152,5 @@ router.put('/candidate/:id', (req, res) => {
   });
 });
 
+///////////////////////////////////////////////////////////////////////////////////////
 module.exports = router;
