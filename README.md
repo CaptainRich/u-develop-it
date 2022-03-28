@@ -46,7 +46,7 @@ The directory structure is setup as follows:
 
 ## Application Screen Shots
 
-![Screenshot](./screen-shots/insomnia_Routes.jpg) Image of the Insomnia routes. 
+![Screenshot](./screen-shots/insomnia_routes.jpg) Image of the Insomnia routes. 
 ![Screenshot](./screen-shots/get_all_candidates.jpg) Image of the Get_All_Candidates route. 
 ![Screenshot](./screen-shots/get_all_parties.jpg) Image of the Get_All_Parties route. 
 ![Screenshot](./screen-shots/get_all_voters.jpg) Image of the Get_All_Voters route. 
