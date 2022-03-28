@@ -1,6 +1,6 @@
 
+// Import the required modules for the 'votes' table.
 
-// Import the required modules
 const express    = require('express');
 const router     = express.Router();
 const db         = require('../../db/database');
@@ -11,7 +11,7 @@ const inputCheck = require('../../utils/inputCheck');
 
 router.post('/vote', ({body}, res) => {
 
-    // Data validation - neither ID can be blank
+    // Data validation - neither ID (the voter or the candidate being voted on) can be blank
     const errors = inputCheck(body, 'voter_id', 'candidate_id');
     if (errors) {
       res.status(400).json({ error: errors });
@@ -19,12 +19,14 @@ router.post('/vote', ({body}, res) => {
     }
   
     // Prepare the terms for the SQL statement
+    // The 'id=?' is a placeholder in  prepared statement.  When defining this value in the 
+    // 'params' optional parameter, SQLite3 'escapes' the values to prevent an injection attack.
     const sql = `INSERT INTO votes (voter_id, candidate_id) VALUES (?, ?)`;
-    const params = [body.voter_id, body.candidate_id];
+    const params = [body.voter_id, body.candidate_id];         // optional parameter to specify the 'id=?' prepared statement
   
     // Execute the request
-    db.run(sql, params, function(err, result) {
-      if (err) {
+    db.run(sql, params, function(err, result) {                // the 'run' method does not retrieve any result data, 
+      if (err) {                                               //   'result' will be undefined here.
         res.status(400).json({ error: err.message });
         return;
       }
@@ -65,4 +67,5 @@ GROUP BY candidate_id ORDER BY count DESC`;
   });
 
 
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
   module.exports = router;
